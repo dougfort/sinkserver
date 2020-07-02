@@ -9,8 +9,9 @@ mod tests;
 use rocket::{response::Debug, Data};
 use std::{env, io};
 
-#[post("/upload", format = "plain", data = "<data>")]
-fn upload(data: Data) -> Result<String, Debug<io::Error>> {
+#[post("/<path>", data = "<data>")]
+fn upload(path: String, data: Data) -> Result<String, Debug<io::Error>> {
+    println!("path = {}", path);
     data.stream_to_file(env::temp_dir().join("upload.txt"))
         .map(|n| n.to_string())
         .map_err(Debug)
@@ -18,7 +19,7 @@ fn upload(data: Data) -> Result<String, Debug<io::Error>> {
 
 #[get("/")]
 fn index() -> &'static str {
-    "Upload your text files by POSTing them to /upload."
+    "Hello world!"
 }
 
 fn rocket() -> rocket::Rocket {
