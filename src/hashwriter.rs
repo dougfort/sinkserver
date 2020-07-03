@@ -1,17 +1,24 @@
 
 use ring::digest::{Context, SHA256};
 
+/// implements std::io::Write for ring::digest Context
 pub struct HashWriter {
+
+    /// A context for multi-step (Init-Update-Finish) digest calculations.
     ctx: Context
 }
 
+
 impl HashWriter {
+
+    /// Returns a HashWriter ready to use
     pub fn new() -> Self {
         HashWriter{
             ctx: Context::new(&SHA256),
         }
     }
 
+    /// Closes the HashWriter and returns the accumulated Digest
     pub fn close(self) -> Vec::<u8> {
         self.ctx.finish().as_ref().to_vec()
     }
