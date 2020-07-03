@@ -6,15 +6,18 @@ extern crate rocket;
 #[cfg(test)]
 mod tests;
 
+mod hashwriter;
+use hashwriter::{HashWriter};
+
 use rocket::{response::Debug, Data};
-use std::{env, io};
+use std::io;
 
 #[post("/<path>", data = "<data>")]
-fn upload(path: String, data: Data) -> Result<String, Debug<io::Error>> {
+fn upload(path: String, data: Data) -> Result<Vec<u8>, Debug<io::Error>> {
     println!("path = {}", path);
-    data.stream_to_file(env::temp_dir().join("upload.txt"))
-        .map(|n| n.to_string())
-        .map_err(Debug)
+    let mut h = HashWriter::new();
+    data.stream_to(&mut h).map_err(Debug)?;
+    Ok(h.close())
 }
 
 #[get("/")]
