@@ -31,13 +31,14 @@ async fn main() -> std::io::Result<()> {
         "actix_server=info,actix_web=info,sinkserver=debug",
     );
     env_logger::init();
+    let address = "0.0.0.0:8080";
 
     HttpServer::new(|| {
         App::new()
             .route("*", web::get().to(hello))
             .route("*", web::post().to(upload))
     })
-    .bind("127.0.0.1:8080")?
+    .bind(address)?
     .run()
     .await
 }
