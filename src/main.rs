@@ -20,8 +20,9 @@ async fn upload(mut body: web::Payload) -> Result<HttpResponse, Error> {
         size += h.write(&item?)? as u64;
     }
     let digest = h.close();
+    let digest_as_slice = digest.as_slice();
 
-    debug!("size = {}; Digest = {:x?}", size, digest.as_slice());
+    debug!("size = {}; Digest = {:?}", size, hex::encode(digest_as_slice));
     Ok(HttpResponse::Ok().header(header::CONTENT_TYPE, "application/octet-stream").body(digest))
 }
 
