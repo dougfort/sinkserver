@@ -2,6 +2,7 @@ use actix_web::{web, App, Error, HttpRequest, HttpResponse, HttpServer, Responde
 use futures::StreamExt;
 use http::header;
 use log::debug;
+use std::env;
 use std::io::Write;
 
 mod hashwriter;
@@ -31,7 +32,8 @@ async fn main() -> std::io::Result<()> {
         "actix_server=info,actix_web=info,sinkserver=debug",
     );
     env_logger::init();
-    let address = "0.0.0.0:8080";
+    
+    let address = construct_address();
 
     HttpServer::new(|| {
         App::new()
@@ -41,4 +43,16 @@ async fn main() -> std::io::Result<()> {
     .bind(address)?
     .run()
     .await
+}
+
+fn construct_address() -> String {
+    let host = match env::var_os("SINKSERVER_HOST") {
+        Some(val) => val.into_string().unwrap(),
+        None => "0.0.0.0".to_string()
+    };
+    let port = match env::var_os("SINKSERVER_PORT") {
+        Some(val) => val.into_string().unwrap(),
+        None => "3000".to_string()
+    };
+    format!("{}:{}", host, port)
 }
