@@ -32,7 +32,7 @@ async fn upload(mut body: web::Payload) -> Result<HttpResponse, Error> {
         .body(digest))
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     std::env::set_var(
         "RUST_LOG",
