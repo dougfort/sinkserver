@@ -24,4 +24,4 @@ to test POST: `curl -X POST -H 'Content-Type: application/octet-stream' -d xxxxx
 
 SINKSERVER_HOST: hostname to bind to : default `0.0.0.0`
 
-SINKSERVER_PORT: port to listen on   : default `3000`get 
+SINKSERVER_PORT: port to listen on   : default `3000`get
